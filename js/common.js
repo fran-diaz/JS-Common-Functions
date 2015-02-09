@@ -110,14 +110,14 @@ jQuery.fn.print = function(){
     },(60 * 1000));
 } 
 
-jQuery.fn.export_excel = function(){
-    $("body:first").append(' <form method="post" lang="es" target="_blank" action="/skip-process/export_excel.php" id="export_excel" style="display:none;"><input name="name" type="hidden" value="" /><input name="data" type="hidden" value="" /></form>');
+jQuery.fn.export_excel = function(path_export_file){
+    $("body:first").append(' <form method="post" lang="es" target="_blank" action="'+path_export_file+'" id="export_excel" style="display:none;"><input name="name" type="hidden" value="" /><input name="data" type="hidden" value="" /></form>');
     $('#export_excel input[name="name"]').val( $(this).closest('.box').find('header span.text').html());
     $('#export_excel input[name="data"]').val( $("<div>").append( $(this).clone()).html());
     $("#export_excel").submit().remove();
 }
 
-jQuery.fn.export_csv = function() {
+jQuery.fn.export_csv = function(path_export_file) {
   var data = $(this).first();
   var csvData = [];
   var tmpArr = [];
@@ -150,7 +150,7 @@ jQuery.fn.export_csv = function() {
   var uri = 'data:application/csv;charset=UTF-8,' + encodeURIComponent(output);
   
   
-  $("body:first").append(' <form method="post" lang="es" target="_blank" action="/skip-process/export_excel.php" id="export_excel" style="display:none;"><input name="name" type="hidden" value="" /><input name="data" type="hidden" value="" /></form>');
+  $("body:first").append('<form method="post" lang="es" target="_blank" action="'+path_export_file+'" id="export_excel" style="display:none;"><input name="name" type="hidden" value="" /><input name="data" type="hidden" value="" /></form>');
     $('#export_excel input[name="name"]').val( $(this).closest('.box').find('header span.text').html());
     $('#export_excel input[name="data"]').val(output);
     $("#export_excel").submit().remove();
@@ -341,7 +341,6 @@ function createQuickNav(target){
 /**********************TRIGGERS**********************/
 
 $(document).on('click','#btn_quick_nav',function(){
-    console.log($('#quick_nav').is(":visible"));
     if($('#quick_nav').is(":visible")){
         $('#quick_nav').hide('fast');
     }else{
