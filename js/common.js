@@ -44,6 +44,9 @@ jQuery.fn.equalHeights = function(minHeight, maxHeight, callback) {
         padding = $(this).innerHeight() - $(this).height();
         if(padding > 0){$(this).height(tallest-padding).css("overflow","auto");}
         else{$(this).height(tallest).css("overflow","auto");}
+        if($(this).css('overflow') !== 'hidden'){
+            $(this).css("overflow","auto");
+        }
     });
 
     // Callback function
