@@ -30,19 +30,6 @@ jQuery.fn.verticalCenter = function(){
     });
 }
 
-jQuery.fn.verticalCenter = function(){
-    this.each(function() {
-        var parent_height = $(this).parent().height();
-        var height = $(this).outerHeight();
-        
-        $(this).removeClass('verticalCenter');
-        if(height < parent_height){
-            var top_margin = (parent_height - height)/2;
-            $(this).css("marginTop",top_margin+'px');
-        }
-    });
-}
-
 jQuery.fn.equalHeights = function(minHeight, maxHeight, callback) {
     if (typeof minHeight !== 'function') {tallest = (minHeight) ? minHeight : 0;}
 
@@ -350,4 +337,8 @@ $(document).on('click','#btn_quick_nav',function(){
 
 $(document).on('click','#quick_nav a',function(){
     $('#quick_nav').hide('fast');
+});
+
+$(document).ready(function(){
+    $('.equalHeights').equalHeights();
 });
