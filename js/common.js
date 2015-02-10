@@ -343,6 +343,10 @@ $(document).on('click','#quick_nav a',function(){
     $('#quick_nav').hide('fast');
 });
 
+$(document).ready(function(){
+    controlViewport();
+});
+
 $(window).load(function(){
     $('.equalHeights').equalHeights();
 });
