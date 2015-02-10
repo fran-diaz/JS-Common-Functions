@@ -38,13 +38,14 @@ jQuery.fn.equalHeights = function(minHeight, maxHeight, callback) {
                 tallest = $(this).innerHeight();
         }
     });
-    if((maxHeight) && typeof maxHeight !== 'function' && tallest < maxHeight) tallest = maxHeight; // Corregido '>'
+    if((maxHeight) && typeof maxHeight !== 'function' && tallest < maxHeight) tallest = maxHeight;
 
     this.each(function() {
         padding = $(this).innerHeight() - $(this).height();
-        if(padding > 0){$(this).height(tallest-padding).css("overflow","auto");}
-        else{$(this).height(tallest).css("overflow","auto");}
-        if($(this).css('overflow') !== 'hidden'){
+        if(padding > 0){$(this).height(tallest-padding);}
+        else{$(this).height(tallest);}
+        
+        if($(this).css('overflow') === 'visible'){
             $(this).css("overflow","auto");
         }
     });
@@ -87,7 +88,7 @@ jQuery.fn.print = function(){
     frame_doc.open();
     frame_doc.write( "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"><html><body><head><title>" );
     frame_doc.write( document.title );
-    frame_doc.write( "</title><link href=\"files/style.css\" rel=\"stylesheet\" type=\"text/css\" />" );
+    frame_doc.write( "</title><link href=\"/css/style.css\" rel=\"stylesheet\" type=\"text/css\" />" );
     frame_doc.write( "</head><body><table id=\""+this.attr('id')+"\" class=\""+this.attr('class')+"\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\">" );
     frame_doc.write( this.html() );
     frame_doc.write( "</table></body></html>" );
@@ -100,14 +101,14 @@ jQuery.fn.print = function(){
     },(60 * 1000));
 } 
 
-jQuery.fn.export_excel = function(path_export_file){
+jQuery.fn.export_excel = function(name,path_export_file){
     $("body:first").append(' <form method="post" lang="es" target="_blank" action="'+path_export_file+'" id="export_excel" style="display:none;"><input name="name" type="hidden" value="" /><input name="data" type="hidden" value="" /></form>');
-    $('#export_excel input[name="name"]').val( $(this).closest('.box').find('header span.text').html());
+    $('#export_excel input[name="name"]').val(name);
     $('#export_excel input[name="data"]').val( $("<div>").append( $(this).clone()).html());
     $("#export_excel").submit().remove();
 }
 
-jQuery.fn.export_csv = function(path_export_file) {
+jQuery.fn.export_csv = function(name,path_export_file) {
   var data = $(this).first();
   var csvData = [];
   var tmpArr = [];
@@ -141,7 +142,7 @@ jQuery.fn.export_csv = function(path_export_file) {
   
   
   $("body:first").append('<form method="post" lang="es" target="_blank" action="'+path_export_file+'" id="export_excel" style="display:none;"><input name="name" type="hidden" value="" /><input name="data" type="hidden" value="" /></form>');
-    $('#export_excel input[name="name"]').val( $(this).closest('.box').find('header span.text').html());
+    $('#export_excel input[name="name"]').val(name);
     $('#export_excel input[name="data"]').val(output);
     $("#export_excel").submit().remove();
 }
