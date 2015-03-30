@@ -28,7 +28,7 @@ jQuery.fn.verticalCenter = function(){
             $(this).css("marginTop",top_margin+'px');
         }
     });
-}
+};
 
 jQuery.fn.equalHeights = function(minHeight, maxHeight, callback) {
     if (typeof minHeight !== 'function') {tallest = (minHeight) ? minHeight : 0;}
@@ -59,18 +59,18 @@ jQuery.fn.equalHeights = function(minHeight, maxHeight, callback) {
         callback();
     }
     return true;
-}
+};
 
 jQuery.fn.squared = function(){
     this.each(function() {
         var w = $(this).width();
         $(this).height(w);
     });
-}
+};
 
 jQuery.fn.reset = function () {
   $(this).each (function() { this.reset(); });
-}
+};
 
 jQuery.fn.print = function(){
     var frame_name = ("printer-" + (new Date()).getTime());
@@ -81,7 +81,7 @@ jQuery.fn.print = function(){
         "position":"absolute",
         "left":"-9999px"
     }).appendTo( $("body:first"));
-    var frame = window.frames[ frame_name ];
+    frame = window.frames[ frame_name ];
     var frame_doc = frame.document;
     var style = $( "<div>" ).append($( "style" ).clone());
 
@@ -94,19 +94,19 @@ jQuery.fn.print = function(){
     frame_doc.write( "</table></body></html>" );
     frame_doc.close();
     frame.focus();
-    frame.print();
+    setTimeout('frame.print()', 1000);
 
     setTimeout(function(){
         frame_html.remove();
     },(60 * 1000));
-} 
+};
 
 jQuery.fn.export_excel = function(name,path_export_file){
     $("body:first").append(' <form method="post" lang="es" target="_blank" action="'+path_export_file+'" id="export_excel" style="display:none;"><input name="name" type="hidden" value="" /><input name="data" type="hidden" value="" /></form>');
     $('#export_excel input[name="name"]').val(name);
     $('#export_excel input[name="data"]').val( $("<div>").append( $(this).clone()).html());
     $("#export_excel").submit().remove();
-}
+};
 
 jQuery.fn.export_csv = function(name,path_export_file) {
   var data = $(this).first();
@@ -145,7 +145,7 @@ jQuery.fn.export_csv = function(name,path_export_file) {
     $('#export_excel input[name="name"]').val(name);
     $('#export_excel input[name="data"]').val(output);
     $("#export_excel").submit().remove();
-}
+};
 
 var valid = true;
 var emailreg = /^[a-zA-Z0-9_\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$/;
@@ -176,30 +176,42 @@ jQuery.fn.Vform = function() {
         var label_present = false;
         var tmp = "";
         var index = 0;
-        if($(this).find('input[name=itm_label_in_value]').val() == "1"){
+        if($(this).find('input[name=itm_label_in_value]').val() === "1"){
             label_present = true;
         }
         $(this).find('.Vtext').each(function(){
-            if($(this).val() == $(this).attr('alt') || $(this).attr('alt') == undefined){
-                msgi = msgi+$(this).attr('name')+": no ha sido completado. \r\n";
+            if($(this).val() === $(this).attr('alt') || $(this).attr('alt') === undefined){
+                if($(this).attr('data-Vmsg') !== undefined){
+                    msgc = msgc+$(this).attr('name')+": "+$(this).attr('data-Vmsg')+"\r\n";
+                }else{
+                    msgi = msgi+$(this).attr('name')+": no ha sido completado. \r\n";
+                }
                 valid = false;
             }
         });
         $(this).find('.Vselect').each(function(){
-            if($(this).val() == "0"){
-                msgi = msgi+$(this).attr('name')+": no se ha seleccionado ningún valor. \r\n";
+            if($(this).val() === "0"){
+                if($(this).attr('data-Vmsg') !== undefined){
+                    msgc = msgc+$(this).attr('name')+": "+$(this).attr('data-Vmsg')+"\r\n";
+                }else{
+                    msgi = msgi+$(this).attr('name')+": no se ha seleccionado ningún valor. \r\n";
+                }
                 valid = false;
             }
         });
         $(this).find('.Vemail').each(function(){
             tmp = $(this).val();
-            if(label_present == true){
+            if(label_present === true){
                 index = tmp.indexOf(":");
                 tmp = tmp.substr(index+1);
                 tmp = $.trim(tmp);
             }
             if( !emailreg.test(tmp) ){
-                msgc = msgc+$(this).attr('name')+": no es una dirección de email válida. \r\n";
+                if($(this).attr('data-Vmsg') !== undefined){
+                    msgc = msgc+$(this).attr('name')+": "+$(this).attr('data-Vmsg')+"\r\n";
+                }else{
+                    msgc = msgc+$(this).attr('name')+": no es una dirección de email válida. \r\n";
+                }
                 valid = false;
             }
         });
@@ -210,23 +222,77 @@ jQuery.fn.Vform = function() {
                 tmp = tmp.substr(index+1);
                 tmp = $.trim(tmp);
             }
-            if( isNaN(parseInt(tmp)) || tmp.length == 0){
-                msgc = msgc+$(this).attr('name')+": no es correcto, solo debe contener números. \r\n";
+            if( isNaN(parseInt(tmp)) || tmp.length === 0){
+                if($(this).attr('data-Vmsg') !== undefined){
+                    msgc = msgc+$(this).attr('name')+": "+$(this).attr('data-Vmsg')+"\r\n";
+                }else{
+                    msgc = msgc+$(this).attr('name')+": no es correcto, solo debe contener números. \r\n";
+                }
                 valid = false;
             }
         });
-        if(msgi.length != 0){
+        
+
+        radio_names = [];
+        checkbox_names = [];
+        checked = [];
+        
+        $(this).find('input[class="Vcheck"]').each(function(i,el){
+            if(radio_names[$(el).attr('name')] === undefined && checkbox_names[$(el).attr('name')] === undefined){
+                if($(el).attr('type') === 'radio'){
+                    if($(el).attr('data-Vmsg') !== undefined){
+                        radio_names[$(el).attr('name')] = $(el).attr('data-Vmsg');
+                    }else{
+                        radio_names[$(el).attr('name')] = true;
+                    }
+                }if($(el).attr('type') === 'checkbox'){
+                    if($(el).attr('data-Vmsg') !== undefined){
+                        checkbox_names[$(el).attr('name')] = $(el).attr('data-Vmsg');
+                    }else{
+                        checkbox_names[$(el).attr('name')] = true;
+                    }
+                }
+            }
+            if($(el).prop('checked') === true){
+                checked[$(el).attr('name')] = true;
+            }
+        });
+        
+        for(i in radio_names){
+            if(checked[i] === undefined){
+                if(radio_names[i] !== true){
+                    msgc = msgc+i+": "+radio_names[i]+"\r\n";
+                }else{
+                    msgc = msgc+i+": no se ha marcado una opción. \r\n";
+                }
+                valid = false;
+            }
+        }
+        for(i in checkbox_names){
+            if(checked[i] === undefined){
+                if(checkbox_names[i] !== true){
+                    msgc = msgc+i+": "+checkbox_names[i]+"\r\n";
+                }else{
+                    msgc = msgc+i+": no se ha marcado una opción. \r\n";
+                }
+                valid = false;
+            }
+        }       
+        
+        
+        if(msgi.length !== 0){
             msg = msg+msgi_c+msgi;
         }
-        if(msgc.length != 0){
+        if(msgc.length !== 0){
             msg = msg+msgc_c+msgc;
         }
-        if(valid == false){
+        if(valid === false){
             alert(msg);
             return false;
         }
     });
-}
+};
+
 /*******************FUNCTIONS**********************/
 function controlViewport(){
     if (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i)) {
@@ -237,6 +303,16 @@ function controlViewport(){
                 viewportmeta.content = 'width=device-width, minimum-scale=0.25, maximum-scale=1.6';
             }, false);
         }
+    }
+}
+
+function generate_clock(container){
+    var now = new Date();
+    container.append('<span class="clock"><span class="h">'+now.getHours()+'</span>:<span class="m">'+now.getMinutes()+'</span>:<span class="s">'+now.getSeconds()+'</span></span>');
+    
+    if(window['clock_defined'] === undefined || clock_defined !== true){
+        window['t'+Math.floor(Math.random() * 2000)] = setInterval("clock()",1000);
+        clock_defined = true; 
     }
 }
 
