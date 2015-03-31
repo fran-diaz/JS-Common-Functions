@@ -389,7 +389,8 @@ function genQuickNav(){
     $('.quick-nav').each(function(){
         var a = $(this).find('a');
         a.each(function(){
-            quick_nav[$(this).html()] = $(this).attr('href');
+            if($(this).closest('.submenu').length === 1){quick_nav['- '+$(this).html()] = $(this).attr('href');}
+            else{quick_nav[$(this).html()] = $(this).attr('href');}
         });
     });
     return quick_nav;
@@ -399,7 +400,8 @@ function createQuickNav(target){
     quick_nav = genQuickNav();
     nav_html = '<span id="btn_quick_nav" class="btn mini mdi left hidden" title="Abrir menú de navegación"></span><div id="quick_nav" class="hidden lpadded"><h2>Menú de navegación</h2>';
     for(var link in quick_nav){
-        nav_html += '<a href="'+quick_nav[link]+'">'+link+'</a>';
+        if(link.substr(0,2) === '- '){nav_html += '<a href="'+quick_nav[link]+'" class="sub">'+link+'</a>';}
+        else{nav_html += '<a href="'+quick_nav[link]+'">'+link+'</a>';}
     }
     nav_html += '</div>';
     target.prepend(nav_html);
