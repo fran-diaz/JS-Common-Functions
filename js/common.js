@@ -398,7 +398,7 @@ function genQuickNav(){
 
 function createQuickNav(target){
     quick_nav = genQuickNav();
-    nav_html = '<span id="btn_quick_nav" class="btn mini mdi left hidden" title="Abrir menú de navegación"></span><div id="quick_nav" class="hidden lpadded" mobile-lpadded><h2>Menú de navegación</h2>';
+    nav_html = '<span id="btn_quick_nav" class="btn mini mdi left hidden" title="Abrir menú de navegación"></span><div id="quick_nav" class="hidden lpadded mobile-lpadded"><h2>Menú de navegación</h2>';
     for(var link in quick_nav){
         if(link.substr(0,2) === '- '){nav_html += '<a href="'+quick_nav[link]+'" class="sub">'+link+'</a>';}
         else{nav_html += '<a href="'+quick_nav[link]+'">'+link+'</a>';}
