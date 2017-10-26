@@ -119,6 +119,7 @@ jQuery.fn.export_csv = function(name,path_export_file) {
   
   data.find("tr").each(function() {
       if($(this).find("th").length) {
+          tmpArr = [];
           $(this).find("th").each(function() {
             tmpStr = $(this).text().replace(/"/g, '""');
             tmpArr.push('"' + tmpStr + '"');
