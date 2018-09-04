@@ -423,9 +423,11 @@ $(document).on('click','#quick_nav a',function(){
 });
 
 $(document).ready(function(){
-    controlViewport();
+    $('.Vform').Vform();
 });
 
-$(window).load(function(){
+$(window).on('load',function(){
     $('.equalHeights').equalHeights();
+    controlViewport();
+    createQuickNav($('#header'));
 });
