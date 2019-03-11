@@ -412,9 +412,9 @@ function createQuickNav(target){
 
 $(document).on('click','#btn_quick_nav',function(){
     if($('#quick_nav').is(":visible")){
-        $('#quick_nav').hide('fast');
+        $('#quick_nav').hide('fast').addClass('d-none').removeClass('d-block');
     }else{
-        $('#quick_nav').show('fast');
+        $('#quick_nav').show('fast').removeClass('d-none').addClass('d-block');
     }
 });
 
